@@ -1,0 +1,3 @@
+com/aws/rekognition/App.class
+com/aws/rekognition/S3ImageLister.class
+com/aws/rekognition/CarDetector.class
