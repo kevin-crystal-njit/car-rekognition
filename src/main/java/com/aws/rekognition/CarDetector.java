@@ -45,7 +45,7 @@ public class CarDetector {
         for (S3Object object : s3Objects) {
             String fileName = object.key();
 
-            System.out.println("Analyzing file: " + fileName);
+            System.out.println("\nAnalyzing file: " + fileName);
 
             // Build the Rekognition S3 object
             software.amazon.awssdk.services.rekognition.model.S3Object rekognitionS3Object =
@@ -76,14 +76,22 @@ public class CarDetector {
                 // Send the fileName to SQS
                 SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
                         .queueUrl(SQS_QUEUE_URL)
-                        .messageBody(fileName)
+		        .messageBody(fileName)
                         .build();
                 sqsClient.sendMessage(sendMsgRequest);
-                System.out.println("Sent key to SQS: " + fileName);
+                System.out.println("Sent key to SQS!");
             }
-        }
+    }
 
-        rekognitionClient.close();
+        // Add the -1 termination message
+        SendMessageRequest endMessage = SendMessageRequest.builder()
+                .queueUrl(SQS_QUEUE_URL)
+                .messageBody("-1")
+                .build();
+        sqsClient.sendMessage(endMessage);
+        System.out.println("\nNo more images: Sending -1");
+
+	rekognitionClient.close();
         s3Client.close();
         sqsClient.close();
     }
