@@ -56,7 +56,7 @@ public class CarDetector {
             DetectLabelsRequest detectRequest = DetectLabelsRequest.builder()
                     .image(image)
                     .maxLabels(10)
-                    .minConfidence(75F)
+                    .minConfidence(90F)
                     .build();
 
             DetectLabelsResponse response = rekognitionClient.detectLabels(detectRequest);
