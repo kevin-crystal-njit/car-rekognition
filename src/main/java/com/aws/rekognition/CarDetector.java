@@ -15,7 +15,8 @@ import java.util.List;
 
 public class CarDetector {
     private static final String BUCKET_NAME = "njit-cs-643";
-    private static final String SQS_QUEUE_URL = "https://sqs.us-east-1.amazonaws.com/280014048542/car-image-indices";
+    private static final String SQS_QUEUE_URL = "https://sqs.us-east-1.amazonaws.com/280014048542/car-image-indices.fifo";
+
     public static void main(String[] args) {
         RekognitionClient rekognitionClient = RekognitionClient.builder()
                 .region(Region.US_EAST_1)
@@ -77,9 +78,10 @@ public class CarDetector {
                 SendMessageRequest sendMsgRequest = SendMessageRequest.builder()
                         .queueUrl(SQS_QUEUE_URL)
 		        .messageBody(fileName)
+                        .messageGroupId("defaultGroup")
                         .build();
                 sqsClient.sendMessage(sendMsgRequest);
-                System.out.println("Sent key to SQS!");
+                System.out.println("Sent key to SQS!!!!!!!!!!!!!!!!!!");
             }
     }
 
@@ -87,6 +89,7 @@ public class CarDetector {
         SendMessageRequest endMessage = SendMessageRequest.builder()
                 .queueUrl(SQS_QUEUE_URL)
                 .messageBody("-1")
+                .messageGroupId("defaultGroup")
                 .build();
         sqsClient.sendMessage(endMessage);
         System.out.println("\nNo more images: Sending -1");
